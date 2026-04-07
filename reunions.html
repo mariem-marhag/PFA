@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Réunions — Joker University Club</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Page Hero -->
+      <div class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <h1>Réunions <span style="color:var(--primary-light)">du Club</span></h1>
+            <p>Planifiez, rejoignez et suivez les réunions du bureau et des commissions.</p>
+          </div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-create-meeting">＋ Créer une réunion</button>
+            <button class="btn btn-outline" id="btn-declare-absence">📩 Déclarer une absence</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance Summary Bar -->
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <span style="font-size:1.375rem;">📊</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:1rem;">Présence — Réunion en cours</div>
+            <div style="font-size:0.875rem;color:var(--text-muted);" id="attendance-count">0 / 0 présents</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="save-attendance-btn">💾 Sauvegarder la présence</button>
+      </div>
+
+      <!-- Grid Layout -->
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start;" id="meetings-layout">
+
+        <!-- Meetings Grid -->
+        <div>
+          <div class="section-header">
+            <h2 class="section-title">Réunions planifiées</h2>
+            <div class="tab-bar">
+              <button class="tab-btn active" data-tab="m-upcoming">À venir</button>
+              <button class="tab-btn" data-tab="m-past">Passées</button>
+            </div>
+          </div>
+
+          <div class="tab-content active" id="m-upcoming">
+            <div class="meetings-grid stagger" id="meetings-grid">
+              <!-- JS injected -->
+            </div>
+          </div>
+          <div class="tab-content" id="m-past">
+            <div class="meetings-grid stagger" id="meetings-past-grid">
+              <!-- JS injected -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Panel -->
+        <aside>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;position:sticky;top:88px;">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1.25rem;">
+              ✅ Feuille de présence
+            </h3>
+            <div id="attendance-list">
+              <!-- JS injected -->
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- CREATE MEETING MODAL -->
+  <div class="modal-overlay" id="modal-create-meeting">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">📅 Créer une réunion</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-create-meeting')">×</button>
+      </div>
+      <form id="create-meeting-form">
+        <div class="form-group">
+          <label class="form-label">Titre</label>
+          <input class="form-input" id="cm-title" type="text" placeholder="Objet de la réunion" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input class="form-input" id="cm-date" type="date" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure</label>
+            <input class="form-input" id="cm-time" type="time" value="18:00"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="cm-type">
+              <option value="bureau">Bureau</option>
+              <option value="generale">Générale</option>
+              <option value="commission">Commission</option>
+              <option value="online">En ligne</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lieu / Lien</label>
+            <input class="form-input" id="cm-location" type="text" placeholder="Salle ou Meet link…"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ordre du jour</label>
+          <textarea class="form-textarea" id="cm-agenda" placeholder="Points à aborder…"></textarea>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-create-meeting')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">📅 Créer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-root"></div>
+  <div id="toast-container"></div>
+
+  <script src="js/navigation.js"></script>
+  <script src="js/reunions.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Événements — Joker University Club</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Page Hero -->
+      <div class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <h1>Événements <span style="color:var(--primary-light)">à venir</span></h1>
+            <p>Workshops, galas, formations — découvrez tout ce qui se passe au Joker Club.</p>
+          </div>
+          <button class="btn btn-accent" id="admin-add-btn" style="display:none;">
+            ＋ Ajouter un événement
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-bar">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="ev-search" placeholder="Rechercher…"/>
+        </div>
+        <button class="filter-pill active" data-filter="all">Tous</button>
+        <button class="filter-pill" data-filter="public">Public</button>
+        <button class="filter-pill" data-filter="formation">Formation</button>
+        <button class="filter-pill" data-filter="prive">Privé</button>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:0.75rem;">
+          <input type="date" id="ev-date-filter" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:0.4rem 0.875rem;font-size:0.8125rem;color:var(--text);outline:none;"/>
+          <button class="btn btn-ghost btn-sm" id="sort-btn">↕ Trier</button>
+        </div>
+      </div>
+
+      <!-- Events Grid -->
+      <div class="events-grid stagger" id="events-grid">
+        <!-- Injected by JS -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ADD EVENT MODAL (admin) -->
+  <div class="modal-overlay" id="modal-add-event">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">✦ Nouvel Événement</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-add-event')">×</button>
+      </div>
+      <form id="add-event-form">
+        <div class="form-group">
+          <label class="form-label">Titre</label>
+          <input class="form-input" id="ae-title" type="text" placeholder="Nom de l'événement" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input class="form-input" id="ae-date" type="date" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure</label>
+            <input class="form-input" id="ae-time" type="time" value="18:00"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="ae-type">
+              <option value="public">Public</option>
+              <option value="formation">Formation</option>
+              <option value="prive">Privé</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Accès</label>
+            <select class="form-select" id="ae-access">
+              <option value="public">Public</option>
+              <option value="members">Membres</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lieu</label>
+          <input class="form-input" id="ae-location" type="text" placeholder="Salle, bâtiment…"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="ae-desc" placeholder="Décrivez l'événement…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Emoji</label>
+            <input class="form-input" id="ae-emoji" type="text" placeholder="🎯" maxlength="2" value="🎯"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Places max</label>
+            <input class="form-input" id="ae-max" type="number" value="50" min="1"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-add-event')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">✦ Publier l'événement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- INSCRIPTION MODAL -->
+  <div class="modal-overlay" id="modal-inscription">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">S'inscrire à l'événement</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-inscription')">×</button>
+      </div>
+      <div id="inscription-form-wrap">
+        <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:0.9375rem;">
+          Événement : <strong id="inscription-event-name" style="color:var(--text);"></strong>
+        </p>
+        <form id="inscription-form">
+          <div class="form-group">
+            <label class="form-label">Nom complet</label>
+            <input class="form-input" id="insc-name" type="text" placeholder="Votre nom" required/>
+            <div class="form-error" id="err-name">Ce champ est requis.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email universitaire</label>
+            <input class="form-input" id="insc-email" type="email" placeholder="nom@univ.fr" required/>
+            <div class="form-error" id="err-email">Email invalide.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Commentaire (optionnel)</label>
+            <textarea class="form-textarea" id="insc-note" placeholder="Message pour l'organisateur…"></textarea>
+          </div>
+          <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+            <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-inscription')">Annuler</button>
+            <button type="submit" class="btn btn-primary btn-block">Envoyer la demande</button>
+          </div>
+        </form>
+      </div>
+      <div class="inscription-success" id="inscription-success">
+        <div class="success-icon">✅</div>
+        <h3>Demande envoyée !</h3>
+        <p>Vous recevrez une confirmation par email.<br>À bientôt à l'événement !</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-root"></div>
+  <div id="toast-container"></div>
+
+  <script src="js/navigation.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/events.js"></script>
+</body>
+</html>

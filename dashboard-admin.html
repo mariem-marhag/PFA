@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Admin — Joker University Club</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Header -->
+      <div class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+              <span class="badge badge-accent">Admin</span>
+              <span style="font-size:0.8125rem;color:var(--text-muted);" id="admin-name">Chargement…</span>
+            </div>
+            <h1>Tableau de bord <span style="color:var(--accent)">Admin</span></h1>
+            <p>Gérez l'ensemble des activités du Joker University Club.</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="JokerAuth.logout()">← Déconnexion</button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="dash-grid stagger" id="admin-stats">
+        <div class="dash-card">
+          <div class="dash-card-icon">👥</div>
+          <div class="dash-card-value" id="stat-members">18</div>
+          <div class="dash-card-label">Membres actifs</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">🎉</div>
+          <div class="dash-card-value" id="stat-events">6</div>
+          <div class="dash-card-label">Événements</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">📋</div>
+          <div class="dash-card-value" id="stat-tasks">8</div>
+          <div class="dash-card-label">Tâches en cours</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">🤝</div>
+          <div class="dash-card-value" id="stat-reunions">3</div>
+          <div class="dash-card-label">Réunions planifiées</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="margin-bottom:2rem;">
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="tab-members">Membres</button>
+          <button class="tab-btn" data-tab="tab-tasks">Tâches</button>
+          <button class="tab-btn" data-tab="tab-events">Événements</button>
+          <button class="tab-btn" data-tab="tab-formations">Formations</button>
+        </div>
+      </div>
+
+      <!-- TAB: MEMBERS -->
+      <div class="tab-content active" id="tab-members">
+        <div class="section-header">
+          <h2 class="section-title">Gestion des Membres</h2>
+          <button class="btn btn-primary btn-sm" id="btn-add-member">＋ Ajouter</button>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+          <table class="members-table">
+            <thead>
+              <tr>
+                <th>Membre</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="members-tbody">
+              <!-- JS injected -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: TASKS -->
+      <div class="tab-content" id="tab-tasks">
+        <div class="section-header">
+          <h2 class="section-title">Gestion des Tâches</h2>
+          <button class="btn btn-primary btn-sm" id="btn-add-task">＋ Nouvelle tâche</button>
+        </div>
+        <div id="admin-tasks-list" class="task-list">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- TAB: EVENTS -->
+      <div class="tab-content" id="tab-events">
+        <div class="section-header">
+          <h2 class="section-title">Gestion des Événements</h2>
+          <button class="btn btn-primary btn-sm" id="btn-add-event-tab">＋ Ajouter</button>
+        </div>
+        <div class="events-grid stagger" id="admin-events-grid">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- TAB: FORMATIONS -->
+      <div class="tab-content" id="tab-formations">
+        <div class="section-header">
+          <h2 class="section-title">Gestion des Formations</h2>
+          <button class="btn btn-primary btn-sm" id="btn-add-formation">＋ Créer une formation</button>
+        </div>
+        <div class="meetings-grid stagger" id="formations-grid">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ADD MEMBER MODAL -->
+  <div class="modal-overlay" id="modal-add-member">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">Ajouter un membre</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-add-member')">×</button>
+      </div>
+      <form id="add-member-form">
+        <div class="form-group">
+          <label class="form-label">Nom complet</label>
+          <input class="form-input" id="am-name" type="text" placeholder="Prénom Nom" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="am-email" type="email" placeholder="nom@univ.fr" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Rôle</label>
+            <select class="form-select" id="am-role">
+              <option value="member">Membre</option>
+              <option value="bureau">Bureau</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Statut</label>
+            <select class="form-select" id="am-status">
+              <option value="actif">Actif</option>
+              <option value="inactif">Inactif</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-add-member')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">Ajouter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD TASK MODAL -->
+  <div class="modal-overlay" id="modal-add-task">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">Nouvelle Tâche</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-add-task')">×</button>
+      </div>
+      <form id="add-task-form">
+        <div class="form-group">
+          <label class="form-label">Intitulé</label>
+          <input class="form-input" id="at-title" type="text" placeholder="Nom de la tâche" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="at-desc" placeholder="Détails de la tâche…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Priorité</label>
+            <select class="form-select" id="at-priority">
+              <option value="high">Haute</option>
+              <option value="med" selected>Moyenne</option>
+              <option value="low">Basse</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Échéance</label>
+            <input class="form-input" id="at-due" type="date"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assigner à</label>
+          <select class="form-select" id="at-assignee">
+            <option>Tous les membres</option>
+            <option>Thomas R.</option>
+            <option>Léa M.</option>
+            <option>Bureau Exécutif</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-add-task')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">Lancer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD EVENT MODAL -->
+  <div class="modal-overlay" id="modal-add-event">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">✦ Nouvel Événement</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-add-event')">×</button>
+      </div>
+      <form id="add-event-form">
+        <div class="form-group">
+          <label class="form-label">Titre</label>
+          <input class="form-input" id="ae-title" type="text" placeholder="Nom de l'événement" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input class="form-input" id="ae-date" type="date" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Heure</label>
+            <input class="form-input" id="ae-time" type="time" value="18:00"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="ae-type">
+              <option value="public">Public</option>
+              <option value="formation">Formation</option>
+              <option value="prive">Privé</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Accès</label>
+            <select class="form-select" id="ae-access">
+              <option value="public">Public</option>
+              <option value="members">Membres</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lieu</label>
+          <input class="form-input" id="ae-location" type="text" placeholder="Salle, bâtiment…"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="ae-desc" placeholder="Décrivez l'événement…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Emoji</label>
+            <input class="form-input" id="ae-emoji" type="text" placeholder="🎯" maxlength="2" value="🎯"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Places max</label>
+            <input class="form-input" id="ae-max" type="number" value="50" min="1"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-add-event')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">✦ Publier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD FORMATION MODAL -->
+  <div class="modal-overlay" id="modal-add-formation">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">Nouvelle Formation</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-add-formation')">×</button>
+      </div>
+      <form id="add-formation-form">
+        <div class="form-group">
+          <label class="form-label">Titre de la formation</label>
+          <input class="form-input" id="af-title" type="text" placeholder="ex: Leadership Avancé" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Formateur</label>
+          <input class="form-input" id="af-trainer" type="text" placeholder="Nom du formateur"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date de début</label>
+            <input class="form-input" id="af-date" type="date" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Durée</label>
+            <input class="form-input" id="af-duration" type="text" placeholder="ex: 3 jours"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="af-desc" placeholder="Contenu et objectifs…"></textarea>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-add-formation')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">Créer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-root"></div>
+  <div id="toast-container"></div>
+
+  <script src="js/navigation.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
