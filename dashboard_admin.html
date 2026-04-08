@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Joker — Dashboard Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="dashboard_admin">
+
+<div class="dashboard-wrapper">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">🃏 Club <span>Joker</span></div>
+    <div class="sidebar-role">Administration</div>
+
+    <ul class="sidebar-menu">
+      <li><div class="nav-item active" data-tab="tab-overview" data-label="Vue d'ensemble">
+        <i class="bi bi-speedometer2"></i> Vue d'ensemble
+      </div></li>
+      <li><div class="nav-item" data-tab="tab-events" data-label="Événements">
+        <i class="bi bi-calendar-event"></i> Événements
+      </div></li>
+      <li><div class="nav-item" data-tab="tab-meetings" data-label="Réunions">
+        <i class="bi bi-people"></i> Réunions
+      </div></li>
+      <li><div class="nav-item" data-tab="tab-requests" data-label="Demandes d'adhésion">
+        <i class="bi bi-person-check"></i> Demandes d'adhésion
+        <span class="badge bg-danger ms-auto" id="request-badge">2</span>
+      </div></li>
+      <li><div class="nav-item" data-tab="tab-formations" data-label="Formations">
+        <i class="bi bi-mortarboard"></i> Formations
+      </div></li>
+      <li><div class="nav-item" data-tab="tab-tasks" data-label="Gestion des tâches">
+        <i class="bi bi-check2-square"></i> Tâches
+      </div></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="admin-initials">AD</div>
+        <div class="sidebar-user-info">
+          <div class="name" id="admin-name">Admin</div>
+          <div class="role">Président du club</div>
+        </div>
+      </div>
+      <button class="btn btn-sm w-100 mt-3" onclick="doLogout()"
+        style="background:rgba(192,57,43,0.2);color:var(--red-light);border:none;border-radius:8px;font-weight:600">
+        <i class="bi bi-box-arrow-left me-1"></i>Déconnexion
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ══════ MAIN ══════ -->
+  <main class="dashboard-main">
+
+    <!-- Topbar -->
+    <div class="dashboard-topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-sm d-lg-none" id="sidebar-toggle" style="background:var(--beige);border:none;border-radius:8px;padding:.4rem .7rem">
+          <i class="bi bi-list fs-5 text-blue"></i>
+        </button>
+        <h1 id="page-title">Vue d'ensemble</h1>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a href="index.html" class="btn btn-sm btn-joker-outline">
+          <i class="bi bi-house me-1"></i>Site public
+        </a>
+      </div>
+    </div>
+
+    <div class="dashboard-body">
+
+      <!-- ── TAB: Overview ── -->
+      <div class="tab-panel active" id="tab-overview">
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-lg-3">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-calendar-event"></i></div>
+              <div>
+                <div class="stat-value" id="stat-events">5</div>
+                <div class="stat-label">Événements</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="stat-card">
+              <div class="stat-icon red"><i class="bi bi-people-fill"></i></div>
+              <div>
+                <div class="stat-value" id="stat-members">2</div>
+                <div class="stat-label">Membres</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="stat-card">
+              <div class="stat-icon gold"><i class="bi bi-calendar2-check"></i></div>
+              <div>
+                <div class="stat-value" id="stat-meetings">3</div>
+                <div class="stat-label">Réunions</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-person-plus"></i></div>
+              <div>
+                <div class="stat-value" id="stat-requests">2</div>
+                <div class="stat-label">Demandes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <div class="dash-panel">
+              <div class="dash-panel-header">
+                <h5><i class="bi bi-calendar-event me-2 text-blue"></i>Événements récents</h5>
+                <button class="btn btn-joker-blue btn-sm" onclick="document.querySelector('[data-tab=tab-events]').click()">
+                  Gérer <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+              </div>
+              <div class="dash-panel-body p-0">
+                <table class="joker-table">
+                  <thead>
+                    <tr><th>Titre</th><th>Date</th><th>Type</th><th>Inscrits</th></tr>
+                  </thead>
+                  <tbody id="overview-events-mini"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="dash-panel">
+              <div class="dash-panel-header">
+                <h5><i class="bi bi-person-check me-2 text-red"></i>Demandes en attente</h5>
+                <button class="btn btn-joker-red btn-sm" onclick="document.querySelector('[data-tab=tab-requests]').click()">
+                  Voir tout
+                </button>
+              </div>
+              <div class="dash-panel-body" id="overview-requests-mini"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: Events ── -->
+      <div class="tab-panel" id="tab-events">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h4 class="text-blue mb-0">Gestion des événements</h4>
+            <p class="text-muted small mb-0">Créez, modifiez et supprimez les événements du club</p>
+          </div>
+          <button class="btn btn-joker-red" onclick="openAddEventModal()">
+            <i class="bi bi-plus-lg me-1"></i>Ajouter un événement
+          </button>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-body p-0">
+            <div class="table-responsive">
+              <table class="joker-table">
+                <thead>
+                  <tr>
+                    <th>Titre</th>
+                    <th>Date & Heure</th>
+                    <th>Lieu</th>
+                    <th>Type</th>
+                    <th>Participants</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-events-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: Meetings ── -->
+      <div class="tab-panel" id="tab-meetings">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h4 class="text-blue mb-0">Gestion des réunions</h4>
+            <p class="text-muted small mb-0">Planifiez les réunions du bureau et de l'équipe</p>
+          </div>
+          <button class="btn btn-joker-red" onclick="openAddMeetingModal()">
+            <i class="bi bi-plus-lg me-1"></i>Planifier une réunion
+          </button>
+        </div>
+        <div class="meeting-grid" id="admin-meetings-grid"></div>
+      </div>
+
+      <!-- ── TAB: Requests ── -->
+      <div class="tab-panel" id="tab-requests">
+        <div class="mb-4">
+          <h4 class="text-blue mb-0">Demandes d'adhésion</h4>
+          <p class="text-muted small">Acceptez ou refusez les demandes pour rejoindre le club</p>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-body p-0">
+            <div class="table-responsive">
+              <table class="joker-table">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-requests-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: Formations ── -->
+      <div class="tab-panel" id="tab-formations">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h4 class="text-blue mb-0">Formations</h4>
+            <p class="text-muted small mb-0">Gérez le programme de formations du club</p>
+          </div>
+          <button class="btn btn-joker-red" onclick="openAddFormationModal()">
+            <i class="bi bi-plus-lg me-1"></i>Ajouter une formation
+          </button>
+        </div>
+        <div class="row g-3" id="admin-formations-container"></div>
+      </div>
+
+      <!-- ── TAB: Tasks ── -->
+      <div class="tab-panel" id="tab-tasks">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h4 class="text-blue mb-0">Gestion des tâches</h4>
+            <p class="text-muted small mb-0">Assignez et suivez les tâches des membres</p>
+          </div>
+          <button class="btn btn-joker-red" onclick="openAddTaskModal()">
+            <i class="bi bi-plus-lg me-1"></i>Assigner une tâche
+          </button>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-body p-0">
+            <div class="table-responsive">
+              <table class="joker-table">
+                <thead>
+                  <tr>
+                    <th>Tâche</th>
+                    <th>Assigné à</th>
+                    <th>Deadline</th>
+                    <th>Priorité</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tasks-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dashboard-body -->
+  </main>
+</div><!-- /dashboard-wrapper -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+<script>
+  /* Mini overview panels filled after init */
+  document.addEventListener("DOMContentLoaded", () => {
+    /* mini events table */
+    const miniEvts = document.getElementById("overview-events-mini");
+    if (miniEvts) {
+      miniEvts.innerHTML = Store.events.slice(0,4).map(e => `
+        <tr>
+          <td><strong>${e.title}</strong></td>
+          <td class="small">${formatDate(e.date)}</td>
+          <td><span class="event-badge ${e.type}">${e.type==="public"?"Public":"Privé"}</span></td>
+          <td>${e.participants}/${e.maxParticipants}</td>
+        </tr>`).join("");
+    }
+    /* mini requests */
+    const miniReqs = document.getElementById("overview-requests-mini");
+    if (miniReqs) {
+      const pending = Store.memberRequests.filter(r => r.status === "pending");
+      miniReqs.innerHTML = pending.length ? pending.map(r => `
+        <div class="d-flex align-items-center gap-3 py-2" style="border-bottom:1px solid var(--beige)">
+          <div class="sidebar-avatar" style="width:36px;height:36px;font-size:.8rem;background:var(--blue)">
+            ${r.name.split(" ").map(w=>w[0]).join("").slice(0,2)}
+          </div>
+          <div class="flex-grow-1">
+            <div class="fw-bold small">${r.name}</div>
+            <div class="small text-muted">${r.email}</div>
+          </div>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-joker-blue" onclick="handleRequest(${r.id},'accepted');this.closest('.d-flex').remove();updateAdminStats()">✓</button>
+            <button class="btn btn-sm btn-joker-red"  onclick="handleRequest(${r.id},'refused');this.closest('.d-flex').remove();updateAdminStats()">✕</button>
+          </div>
+        </div>`).join("") : `<div class="empty-state py-3"><i class="bi bi-inbox fs-2"></i><p class="mt-2">Aucune demande en attente</p></div>`;
+    }
+  });
+</script>
+</body>
+</html>
