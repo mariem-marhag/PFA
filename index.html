@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accueil — Joker University Club</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <!-- HERO -->
+  <main class="page-wrapper">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-eyebrow">
+          <span class="dot"></span>
+          Club Universitaire Officiel · Saison 2026
+        </div>
+        <h1 class="hero-title">
+          Bienvenue au<br>
+          <span class="highlight">Joker</span>
+          <span class="accent"> University</span><br>Club.
+        </h1>
+        <p class="hero-sub">
+          Une communauté d'excellence où étudiants ambitieux se retrouvent pour construire l'avenir ensemble.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" id="cta-join">
+            ✦ Rejoindre le Club
+          </button>
+          <button class="btn btn-outline btn-lg" id="cta-events">
+            Voir les événements →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section-sm">
+      <div class="container">
+        <div class="stats-row stagger" id="stats-row">
+          <div class="stat-item">
+            <div class="stat-value" data-counter="60">0</div>
+            <div class="stat-label">Membres actifs</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-counter="6">0</div>
+            <div class="stat-label">Événements / an</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-counter="3">0</div>
+            <div class="stat-label">Partenaires</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" data-counter="87" data-suffix="%">0%</div>
+            <div class="stat-label">Satisfaction</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UPCOMING EVENTS PREVIEW -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 style="font-family:var(--font-display);font-size:1.625rem;font-weight:700;margin-bottom:0.25rem;">
+              Prochains Événements
+            </h2>
+            <p style="color:var(--text-muted);font-size:0.9375rem;">Découvrez ce qui se prépare</p>
+          </div>
+          <button class="btn btn-outline btn-sm" id="see-all-btn">Voir tout →</button>
+        </div>
+
+        <!-- Search -->
+        <div class="filters-bar">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="home-search" placeholder="Rechercher un événement…"/>
+          </div>
+          <button class="filter-pill active" data-filter="all">Tous</button>
+          <button class="filter-pill" data-filter="public">Public</button>
+          <button class="filter-pill" data-filter="formation">Formation</button>
+          <button class="filter-pill" data-filter="prive">Privé</button>
+        </div>
+
+        <div class="events-grid stagger" id="home-events-grid">
+          <!-- JS will inject cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY JOIN -->
+    <section class="section" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div class="container">
+        <h2 style="font-family:var(--font-display);font-size:1.75rem;text-align:center;margin-bottom:0.5rem;">
+          Pourquoi rejoindre <span style="color:var(--primary-light)">Joker</span> ?
+        </h2>
+        <p style="text-align:center;color:var(--text-muted);margin-bottom:3rem;">Trois bonnes raisons parmi tant d'autres</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;" class="stagger">
+          <div class="dash-card" style="text-align:center;">
+            <div class="dash-card-icon">🎯</div>
+            <h3 style="font-family:var(--font-display);font-size:1.0625rem;margin-bottom:0.5rem;">Développement</h3>
+            <p style="font-size:0.875rem;color:var(--text-muted);">Formations exclusives, workshops pratiques et mentorat par des alumni.</p>
+          </div>
+          <div class="dash-card" style="text-align:center;">
+            <div class="dash-card-icon">🤝</div>
+            <h3 style="font-family:var(--font-display);font-size:1.0625rem;margin-bottom:0.5rem;">Networking</h3>
+            <p style="font-size:0.875rem;color:var(--text-muted);">Rencontrez les leaders de demain lors de nos galas et soirées membres.</p>
+          </div>
+          <div class="dash-card" style="text-align:center;">
+            <div class="dash-card-icon">🚀</div>
+            <h3 style="font-family:var(--font-display);font-size:1.0625rem;margin-bottom:0.5rem;">Opportunités</h3>
+            <p style="font-size:0.875rem;color:var(--text-muted);">Accès prioritaire aux offres de stages et d'emploi de nos partenaires.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- INSCRIPTION MODAL -->
+  <div class="modal-overlay" id="modal-inscription">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">S'inscrire à l'événement</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-inscription')">×</button>
+      </div>
+      <div id="inscription-form-wrap">
+        <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:0.9375rem;">
+          Événement : <strong id="inscription-event-name" style="color:var(--text);"></strong>
+        </p>
+        <form id="inscription-form">
+          <div class="form-group">
+            <label class="form-label">Nom complet</label>
+            <input class="form-input" id="insc-name" type="text" placeholder="Votre nom" required/>
+            <div class="form-error" id="err-name">Ce champ est requis.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email universitaire</label>
+            <input class="form-input" id="insc-email" type="email" placeholder="nom@univ.fr" required/>
+            <div class="form-error" id="err-email">Email invalide.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Commentaire (optionnel)</label>
+            <textarea class="form-textarea" id="insc-note" placeholder="Message pour l'organisateur…"></textarea>
+          </div>
+          <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+            <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-inscription')">Annuler</button>
+            <button type="submit" class="btn btn-primary btn-block">Envoyer la demande</button>
+          </div>
+        </form>
+      </div>
+      <div class="inscription-success" id="inscription-success">
+        <div class="success-icon">✅</div>
+        <h3>Demande envoyée !</h3>
+        <p>Vous recevrez une confirmation par email.<br>À bientôt à l'événement !</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-root"></div>
+  <div id="toast-container"></div>
+
+  <script src="js/navigation.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

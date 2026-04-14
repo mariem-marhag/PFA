@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Membre — Joker University Club</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+  <div id="nav-root"></div>
+
+  <main class="page-wrapper">
+    <div class="container">
+
+      <!-- Header -->
+      <div class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+              <span class="badge badge-primary">Membre</span>
+              <span style="font-size:0.8125rem;color:var(--text-muted);" id="member-name">Chargement…</span>
+            </div>
+            <h1>Mon <span style="color:var(--primary-light)">Espace</span></h1>
+            <p>Accédez à vos événements, tâches assignées et réunions du club.</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="JokerAuth.logout()">← Déconnexion</button>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="dash-grid stagger">
+        <div class="dash-card">
+          <div class="dash-card-icon">🎉</div>
+          <div class="dash-card-value" id="m-stat-inscriptions">0</div>
+          <div class="dash-card-label">Inscriptions</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">📋</div>
+          <div class="dash-card-value" id="m-stat-tasks">0</div>
+          <div class="dash-card-label">Mes tâches</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">🤝</div>
+          <div class="dash-card-value">3</div>
+          <div class="dash-card-label">Réunions à venir</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-icon">📚</div>
+          <div class="dash-card-value">2</div>
+          <div class="dash-card-label">Formations suivies</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="margin-bottom:2rem;">
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="m-tab-events">Événements</button>
+          <button class="tab-btn" data-tab="m-tab-tasks">Mes Tâches</button>
+          <button class="tab-btn" data-tab="m-tab-profile">Profil</button>
+        </div>
+      </div>
+
+      <!-- TAB: EVENTS (accessible to member) -->
+      <div class="tab-content active" id="m-tab-events">
+        <div class="section-header">
+          <h2 class="section-title">Événements accessibles</h2>
+          <a href="events.html" class="btn btn-outline btn-sm">Voir tout →</a>
+        </div>
+        <div class="events-grid stagger" id="member-events-grid">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- TAB: TASKS -->
+      <div class="tab-content" id="m-tab-tasks">
+        <div class="section-header">
+          <h2 class="section-title">Mes tâches assignées</h2>
+          <button class="btn btn-primary btn-sm" id="btn-add-my-task">＋ Ajouter</button>
+        </div>
+        <div class="task-list stagger" id="member-tasks-list">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- TAB: PROFILE -->
+      <div class="tab-content" id="m-tab-profile">
+        <div style="max-width:480px;">
+          <div class="section-header" style="margin-bottom:1.5rem;">
+            <h2 class="section-title">Mon Profil</h2>
+          </div>
+          <div class="dash-card" style="margin-bottom:1.25rem;display:flex;align-items:center;gap:1.25rem;">
+            <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff;flex-shrink:0;" id="profile-avatar">?</div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:1.125rem;font-weight:700;" id="profile-name">—</div>
+              <div style="font-size:0.875rem;color:var(--text-muted);" id="profile-email">—</div>
+              <div style="margin-top:0.375rem;"><span class="badge badge-primary">Membre actif</span></div>
+            </div>
+          </div>
+          <form id="profile-form">
+            <div class="form-group">
+              <label class="form-label">Nom affiché</label>
+              <input class="form-input" id="pf-name" type="text" placeholder="Votre nom"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" id="pf-email" type="email" placeholder="Email"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bio (optionnel)</label>
+              <textarea class="form-textarea" id="pf-bio" placeholder="Parlez-vous un peu…"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ADD TASK MODAL -->
+  <div class="modal-overlay" id="modal-add-task">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">Nouvelle Tâche Personnelle</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-add-task')">×</button>
+      </div>
+      <form id="add-task-form">
+        <div class="form-group">
+          <label class="form-label">Intitulé</label>
+          <input class="form-input" id="mt-title" type="text" placeholder="Nom de la tâche" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Priorité</label>
+            <select class="form-select" id="mt-priority">
+              <option value="high">Haute</option>
+              <option value="med" selected>Moyenne</option>
+              <option value="low">Basse</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Échéance</label>
+            <input class="form-input" id="mt-due" type="date"/>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-add-task')">Annuler</button>
+          <button type="submit" class="btn btn-primary btn-block">Ajouter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- INSCRIPTION MODAL -->
+  <div class="modal-overlay" id="modal-inscription">
+    <div class="modal anim-scale">
+      <div class="modal-header">
+        <h2 class="modal-title">S'inscrire</h2>
+        <button class="modal-close" onclick="JokerModal.close('modal-inscription')">×</button>
+      </div>
+      <div id="inscription-form-wrap">
+        <p style="color:var(--text-muted);margin-bottom:1.5rem;font-size:0.9375rem;">
+          Événement : <strong id="inscription-event-name" style="color:var(--text);"></strong>
+        </p>
+        <form id="inscription-form">
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input class="form-input" id="insc-name" type="text" required/>
+            <div class="form-error" id="err-name">Requis.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="insc-email" type="email" required/>
+            <div class="form-error" id="err-email">Email invalide.</div>
+          </div>
+          <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+            <button type="button" class="btn btn-ghost btn-block" onclick="JokerModal.close('modal-inscription')">Annuler</button>
+            <button type="submit" class="btn btn-primary btn-block">Envoyer</button>
+          </div>
+        </form>
+      </div>
+      <div class="inscription-success" id="inscription-success">
+        <div class="success-icon">✅</div>
+        <h3>Demande envoyée !</h3>
+        <p>À bientôt à l'événement !</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-root"></div>
+  <div id="toast-container"></div>
+
+  <script src="js/navigation.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/member.js"></script>
+</body>
+</html>
